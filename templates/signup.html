@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eato Signup</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#f3f3f3;
+    min-height:100vh;
+    overflow:hidden;
+    font-family:'Segoe UI',sans-serif;
+}
+
+.signup-container{
+    width:96%;
+    height:95vh;
+    margin:2.5vh auto;
+    background:#fff;
+    border-radius:28px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+}
+
+.left-section{
+    padding:0;
+}
+
+.left-section img{
+    width:100%;
+    height:95vh;
+    object-fit:cover;
+}
+
+.right-section{
+    height:95vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#fafafa;
+}
+
+.signup-card{
+    zoom: 75%;
+    width:100%;
+    max-width:650px;
+    background:#fff;
+    padding:60px;
+    border-radius:50px;
+    box-shadow:0 5px 25px rgba(0,0,0,.05);
+}
+
+.signup-title{
+    font-size:32px;
+    font-weight:700;
+    color:#222;
+}
+
+.signup-subtitle{
+    color:#777;
+    margin-bottom:25px;
+}
+
+.input-group{
+    margin-bottom:18px;
+}
+
+.input-group-text{
+    background:#fff;
+    border-right:none;
+    color:#ff5a00;
+}
+
+.form-control{
+    height:55px;
+    border-left:none;
+}
+
+.form-control:focus{
+    box-shadow:none;
+    border-color:#ff5a00;
+}
+
+.btn-signup{
+    background:linear-gradient(90deg,#ff6a00,#ff4500);
+    color:#fff;
+    height:58px;
+    border:none;
+    border-radius:12px;
+    font-size:20px;
+    font-weight:600;
+}
+
+.btn-signup:hover{
+    color:#fff;
+}
+
+.social-btn{
+    height:52px;
+    border-radius:10px;
+}
+
+.link-orange{
+    color:#ff5a00;
+    text-decoration:none;
+    font-weight:600;
+}
+
+.divider{
+    text-align:center;
+    color:#999;
+    margin:20px 0;
+    position:relative;
+}
+
+.divider:before,
+.divider:after{
+    content:'';
+    position:absolute;
+    top:50%;
+    width:35%;
+    height:1px;
+    background:#ddd;
+}
+
+.divider:before{
+    left:0;
+}
+
+.divider:after{
+    right:0;
+}
+
+@media(max-width:991px){
+
+    body{
+        overflow:auto;
+    }
+
+    .left-section{
+        display:none;
+    }
+
+    .signup-container{
+        width:100%;
+        height:auto;
+        margin:0;
+        border-radius:0;
+    }
+
+    .right-section{
+        height:auto;
+        padding:30px 15px;
+    }
+
+    .signup-card{
+        max-width:100%;
+        box-shadow:none;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container-fluid">
+<div class="row g-0 signup-container">
+
+    <!-- Left Image -->
+    <div class="col-lg-5 left-section">
+        <img src="{% static 'images/1000343642.jpg' %}" alt="Food Banner">
+    </div>
+
+    <!-- Right Form -->
+    <div class="col-lg-7 right-section">
+
+        <div class="signup-card">
+
+            <div class="text-center mb-4">
+                <h2 class="signup-title">Create Your Account</h2>
+                <p class="signup-subtitle">
+                    Join Eato and start your delicious journey
+                </p>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-person"></i>
+                    </span>
+                    <input type="text" name="name" class="form-control" placeholder="Full Name">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-envelope"></i>
+                    </span>
+                    <input type="email" name="email" class="form-control" placeholder="Email Address">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-lock"></i>
+                    </span>
+                    <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-text">
+                        <i class="bi bi-shield-lock"></i>
+                    </span>
+
+                    <input type="password" name="confirm_password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="terms">
+
+                    <label class="form-check-label" for="terms">
+                        I agree to the
+                        <a href="#" class="link-orange">Terms & Conditions</a>
+                        and
+                        <a href="#" class="link-orange">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-signup w-100">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>
+                    Sign Up
+                </button>
+
+                {% if messages %}
+                    {% for message in messages %}
+
+                        <div class="alert alert-warning text-center">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+                {% endif %}
+
+                <div class="divider">
+                    or continue with
+                </div>
+
+                <div class="row g-2">
+
+                    <div class="col-6">
+                        <button type="button" class="btn btn-outline-secondary social-btn w-100">
+                            <i class="bi bi-google text-danger me-2"></i>
+                            Google
+                        </button>
+                    </div>
+
+                    <div class="col-6">
+                        <button type="button" class="btn btn-outline-secondary social-btn w-100">
+                            <i class="bi bi-facebook text-primary me-2"></i>
+                            Facebook
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="text-center mt-4">
+                    Already have an account?
+                    <a href="{% url 'login' %}" class="link-orange">Login</a>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
+
+<script>
+function togglePassword(fieldId, iconId){
+
+    let field = document.getElementById(fieldId);
+    let icon = document.getElementById(iconId);
+
+    if(field.type === "password"){
+        field.type = "text";
+        icon.classList.replace("bi-eye","bi-eye-slash");
+    }else{
+        field.type = "password";
+        icon.classList.replace("bi-eye-slash","bi-eye");
+    }
+}
+</script>
+
+</body>
+</html>

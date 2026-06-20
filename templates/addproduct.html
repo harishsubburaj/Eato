@@ -1,0 +1,607 @@
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add Product | Eato Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+
+body{
+    margin:0;
+    overflow-x:hidden;
+    background:#f8f9fa;
+    font-family:'Segoe UI',sans-serif;
+}
+
+.sidebar-wrapper{
+    position:fixed;
+    left:0;
+    top:0;
+    width:210px;
+    height:100vh;
+    z-index:1000;
+}
+
+.main-content{
+    margin-left:210px;
+    min-height:100vh;
+    transition:.3s;
+}
+
+.dashboard-body{
+    zoom:65%;
+    padding:25px;
+}
+
+.sidebar-hide{
+    transform:translateX(-210px);
+}
+
+.main-expand{
+    margin-left:0;
+}
+
+.product-card{
+    background:#fff;
+    border:none;
+    border-radius:18px;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+
+.product-header{
+    padding:25px;
+    border-bottom:1px solid #efefef;
+}
+
+.product-title{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.product-title i{
+    font-size:34px;
+    color:#ff5a00
+}
+
+.product-title h2{
+    font-size:40px;
+    font-weight:700;
+    margin:0;
+}
+
+.product-title p{
+    margin:0;
+    color:#777;
+    font-size:17px;
+}
+
+.add-btn{
+    background:#ff5a00;
+    color:#fff;
+    border:none;
+    padding:13px 28px;
+    border-radius:10px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.add-btn:hover{
+    background:#e74f00;
+}
+
+/* Search */
+
+.input-group-text{
+
+    height:46px;
+
+}
+
+.form-control,
+.form-select{
+
+    height:46px;
+
+    border-radius:10px;
+
+}
+
+.input-group .form-control{
+
+    border-radius:0 10px 10px 0;
+
+}
+
+.input-group-text{
+
+    border-radius:10px 0 0 10px;
+
+}
+
+.table{
+
+    border:1px solid #ececec;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+}
+
+.table thead{
+
+    background:#f8f9fa;
+
+}
+
+.table th{
+
+    padding:15px;
+
+    font-weight:600;
+
+    font-size:15px;
+
+    color:#333;
+
+    border-bottom:1px solid #ececec;
+
+}
+
+/* Empty State */
+
+.empty-products{
+
+    height:470px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+}
+
+.empty-icon{
+
+    width:130px;
+
+    height:130px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#d4d7dc;
+
+    font-size:95px;
+
+    margin-bottom:20px;
+
+}
+
+.empty-products h3{
+
+    font-size:38px;
+
+    font-weight:700;
+
+    margin-bottom:10px;
+
+    color:#222;
+
+}
+
+.empty-products p{
+
+    color:#777;
+
+    font-size:18px;
+
+}
+
+.pagination .page-link{
+
+    width:45px;
+
+    height:45px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    border-radius:10px;
+
+    margin-left:8px;
+
+    color:#666;
+
+    border:1px solid #ececec;
+
+}
+
+.pagination .active .page-link{
+
+    background:#ff5a00;
+
+    border-color:#ff5a00;
+
+    color:#fff;
+
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- Sidebar -->
+
+<div class="sidebar-wrapper" id="sidebar">
+
+    {% include 'adminsidebar.html' %}
+
+</div>
+
+<!-- Main -->
+
+<div class="main-content" id="main">
+
+    {% include 'adminnavbar.html' %}
+
+    <div class="dashboard-body">
+
+        <div class="card product-card">
+
+            <div class="product-header">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div class="product-title">
+
+                        <i class="bi bi-basket2"></i>
+
+                        <div>
+
+                            <h2>Products</h2>
+
+                            <p>Manage all your food products from here.</p>
+
+                        </div>
+
+                    </div>
+
+                    <a href="{% url 'add_product_form' %}" class="add-btn text-decoration-none">
+
+                        <i class="bi bi-plus-lg"></i>
+
+                        Add New Product
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="card-body">
+                <!-- Search & Filter Row -->
+
+                <div class="row g-3 align-items-center mb-4">
+
+                    <!-- Search -->
+
+                    <div class="col-lg-4">
+
+                        <div class="input-group">
+
+                            <span class="input-group-text bg-white border-end-0">
+
+                                <i class="bi bi-search text-secondary"></i>
+
+                            </span>
+
+                            <input type="text"
+                                class="form-control border-start-0"
+                                placeholder="Search products...">
+
+                        </div>
+
+                    </div>
+
+                    <!-- Category -->
+
+                    <div class="col-lg-2">
+
+                        <select class="form-select">
+
+                            <option>All Categories</option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- Status -->
+
+                    <div class="col-lg-2">
+
+                        <select class="form-select">
+
+                            <option>All Status</option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- Reset -->
+
+                    <div class="col-lg-2">
+
+                        <button class="btn btn-light border w-100">
+
+                            <i class="bi bi-arrow-clockwise"></i>
+
+                            Reset
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Product Table -->
+
+                <div class="table-responsive">
+
+                <table class="table align-middle mb-0">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th width="60">#</th>
+
+                            <th>Product</th>
+
+                            <th>Category</th>
+
+                            <th width="120">Price</th>
+
+                            <th width="120">Stock</th>
+
+                            <th width="120">Status</th>
+
+                            <th width="120">Featured</th>
+
+                            <th width="150">Actions</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for product in products %}
+
+                    <tr>
+
+                        <td>{{ forloop.counter }}</td>
+
+                        <td>
+
+                            <div class="d-flex align-items-center">
+
+                                <img src="{{ product.image.url }}"
+                                     width="70"
+                                     height="70"
+                                     class="rounded me-3"
+                                     style="object-fit:cover;">
+
+                                <div>
+
+                                    <strong>{{ product.name }}</strong>
+
+                                    <br>
+
+                                    <small class="text-muted">{{ product.description|truncatewords:8 }}</small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td>
+
+                            {{ product.category.name }}
+
+                        </td>
+
+                        <td>
+
+                            ₹{{ product.price }}
+
+                        </td>
+
+                        <td>
+
+                            {{ product.stock }}
+
+                        </td>
+
+                        <td>
+
+                            {% if product.status %}
+
+                            <span class="badge bg-success">Active</span>
+
+                            {% else %}
+
+                            <span class="badge bg-danger">Inactive</span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge bg-warning text-dark">No</span>
+
+                        </td>
+
+                        <td>
+
+                            <a href="" class="btn btn-sm btn-warning">
+
+                                <i class="bi bi-pencil"></i>
+
+                            </a>
+
+                            <a href="" class="btn btn-sm btn-danger ms-2" onclick="return confirm('Delete this product?')">
+
+                                <i class="bi bi-trash"></i>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="8" class="p-0">
+
+                            <div class="empty-products">
+
+                                <div class="empty-icon">
+
+                                    <i class="bi bi-box-seam"></i>
+
+                                </div>
+
+                                <h3>No products added yet!</h3>
+
+                                <p>Start by adding a new product.</p>
+
+                                <a href="{% url 'add_product_form' %}" class="btn btn-orange text-white text-decoration-none mt-3">
+
+                                    <i class="bi bi-plus-lg"></i>
+
+                                    Add New Product
+
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+                </div>
+
+                <!-- Footer -->
+
+                <div class="d-flex justify-content-between align-items-center mt-4">
+
+                    <div class="text-secondary fw-semibold">
+
+                        Showing {{ products.count }} product{{ products.count|pluralize }}
+
+                    </div>
+
+                    <nav>
+
+                        <ul class="pagination mb-0">
+
+                            <li class="page-item disabled">
+
+                                <a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a>
+
+                            </li>
+
+                            <li class="page-item active">
+
+                                <a class="page-link" href="#">1</a>
+
+                            </li>
+
+                            <li class="page-item disabled">
+
+                                <a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a>
+
+                            </li>
+
+                        </ul>
+
+                    </nav>
+
+                </div>
+
+            </div>
+
+        </div>
+
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+
+const toggle=document.getElementById("toggleSidebar");
+const sidebar=document.getElementById("sidebar");
+const main=document.getElementById("main");
+
+if(toggle){
+
+toggle.addEventListener("click",function(){
+
+sidebar.classList.toggle("sidebar-hide");
+main.classList.toggle("main-expand");
+
+});
+
+}
+
+const search=document.querySelector("input[type='text']");
+const category=document.querySelectorAll("select")[0];
+const status=document.querySelectorAll("select")[1];
+const reset=document.querySelector(".btn-light");
+
+if(reset){
+
+reset.addEventListener("click",function(){
+
+search.value="";
+category.selectedIndex=0;
+status.selectedIndex=0;
+
+});
+
+}
+
+});
+</script>
+
+</body>
+</html>
